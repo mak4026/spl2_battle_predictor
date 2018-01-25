@@ -37,22 +37,25 @@ def __is_disconnected(battle):
     return False
 
 def _process_battle_data(battle):
-    my_weapons = [p['weapon']['reskin_of'] or p['weapon']['key'] for p in battle['players'] if p['team'] == 'my']
-    his_weapons = [p['weapon']['reskin_of'] or p['weapon']['key'] for p in battle['players'] if p['team'] == 'his']
-    stage = battle['map']['key']
-    rule = battle['rule']['key']
-    rank = battle['rank']['zone']['key']
-    if battle['rank']['key'] == 's+':
-        rank = 's+'
-    gachi_power = battle['estimate_gachi_power']
-    result = battle['result']
-    return my_weapons + his_weapons + [stage, rule, rank, gachi_power, result]
+    try:
+        my_weapons = [p['weapon']['reskin_of'] or p['weapon']['key'] for p in battle['players'] if p['team'] == 'my']
+        his_weapons = [p['weapon']['reskin_of'] or p['weapon']['key'] for p in battle['players'] if p['team'] == 'his']
+        stage = battle['map']['key']
+        rule = battle['rule']['key']
+        rank = battle['rank']['zone']['key']
+        if battle['rank']['key'] == 's+':
+            rank = 's+'
+        gachi_power = battle['estimate_gachi_power']
+        result = battle['result']
+        return my_weapons + his_weapons + [stage, rule, rank, gachi_power, result]
+    except (TypeError, KeyError) as e:
+        return None
 
 def extract_valid_battle_data(battles, start, end):
     return [_process_battle_data(battle) for battle in battles if _is_valid(battle, start, end)]
 
 def extract_from_json_files(json_dir, start, end):
-    json_files = glob.glob(json_dir+'/*.json')
+    json_files = glob.glob(json_dir+'/stat*.json')
     print(json_files)
     dats = []
     for ajson in json_files:
@@ -79,4 +82,6 @@ if __name__=='__main__':
     end_at = datetime.strptime(args.end, "%Y-%m-%d-%H")
     if start_at > end_at:
         raise ValueError('must be start_time <= end_time')
-    print(extract_from_json_files(args.data_dir, start_at, end_at))
+    dats = extract_from_json_files(args.data_dir, start_at, end_at)
+    print(len(dats))
+    print(sum(x is None for x in dats))
