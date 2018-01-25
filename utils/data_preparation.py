@@ -1,6 +1,7 @@
 import glob
 import json
 from datetime import datetime
+from multiprocessing import Pool, cpu_count
 
 def _is_valid(battle, start, end):
     return __is_automated(battle) and __is_ranked_gachi(battle) and __is_within_pediod(battle, start, end) and not __is_disconnected(battle)
@@ -54,15 +55,21 @@ def _process_battle_data(battle):
 def extract_valid_battle_data(battles, start, end):
     return [_process_battle_data(battle) for battle in battles if _is_valid(battle, start, end)]
 
+def extract_from_a_json(ajson, start, end):
+    with open(ajson) as f:
+        battles = json.load(f)
+        return extract_valid_battle_data(battles, start, end)
+
+def wrap_extraction(args):
+    return extract_from_a_json(*args)
+
 def extract_from_json_files(json_dir, start, end):
     json_files = glob.glob(json_dir+'/stat*.json')
     print(json_files)
-    dats = []
-    for ajson in json_files:
-        with open(ajson) as f:
-            battles = json.load(f)
-            dats.extend(extract_valid_battle_data(battles, start, end))
-    return dats
+    with Pool(processes=cpu_count()) as p:
+        args = [(ajson, start, end) for ajson in json_files]
+        dats = p.map(wrap_extraction, args)
+    return [l for lst in dats for l in lst]
 
 if __name__=='__main__':
     import argparse
