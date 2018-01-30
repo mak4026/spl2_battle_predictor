@@ -2,6 +2,9 @@ import glob
 import json
 from datetime import datetime
 from multiprocessing import Pool, cpu_count
+import numpy as np
+import dbs
+import csv
 
 def _is_valid(battle, start, end):
     return __is_automated(battle) and __is_ranked_gachi(battle) and __is_within_pediod(battle, start, end) and not __is_disconnected(battle)
@@ -37,18 +40,34 @@ def __is_disconnected(battle):
                 return True
     return False
 
+def _make_weapon_vec(team_weapons):
+    weapon_indices = [dbs.weapons[w] for w in team_weapons]
+    return np.eye(dbs.weapon_num, dtype=np.int32)[weapon_indices].sum(axis=0).tolist()
+
 def _process_battle_data(battle):
     try:
         my_weapons = [p['weapon']['reskin_of'] or p['weapon']['key'] for p in battle['players'] if p['team'] == 'my']
+        my_weapons = _make_weapon_vec(my_weapons)
+
         his_weapons = [p['weapon']['reskin_of'] or p['weapon']['key'] for p in battle['players'] if p['team'] == 'his']
-        stage = battle['map']['key']
-        rule = battle['rule']['key']
-        rank = battle['rank']['zone']['key']
+        his_weapons = _make_weapon_vec(his_weapons)
+
+        stage_name = battle['map']['key']
+        stage = [1 if i == dbs.stages[stage_name] else 0 for i in range(dbs.stage_num)]
+
+        rule_name = battle['rule']['key']
+        rule = [1 if i == dbs.rules[rule_name] else 0 for i in range(dbs.rule_num)]
+
+        rank_name = battle['rank']['zone']['key']
         if battle['rank']['key'] == 's+':
-            rank = 's+'
+            rank_name = 's+'
+        rank = [1 if i == dbs.ranks[rank_name] else 0 for i in range(dbs.rank_num)]
+
         gachi_power = battle['estimate_gachi_power']
         result = battle['result']
-        return my_weapons + his_weapons + [stage, rule, rank, gachi_power, result]
+        result = dbs.results[result]
+
+        return my_weapons + his_weapons + stage + rule + rank + [gachi_power, result]
     except (TypeError, KeyError) as e:
         return None
 
@@ -69,7 +88,7 @@ def extract_from_json_files(json_dir, start, end):
     with Pool(processes=cpu_count()) as p:
         args = [(ajson, start, end) for ajson in json_files]
         dats = p.map(wrap_extraction, args)
-    return [l for lst in dats for l in lst]
+    return [l for lst in dats for l in lst if l is not None]
 
 if __name__=='__main__':
     import argparse
@@ -83,6 +102,10 @@ if __name__=='__main__':
     parser.add_argument('--end', '-e',
                          help='集計対象に含める期間の終了時刻を%YYYY-%mm-%dd-%HHで指定します',
                          type=str)
+    parser.add_argument('--dst', '-d',
+                        required=True,
+                        help='前処理を行ったcsvファイルを出力するパスを指定します',
+                        type=str)
     args = parser.parse_args()
 
     start_at = datetime.strptime(args.start, "%Y-%m-%d-%H")
@@ -90,5 +113,8 @@ if __name__=='__main__':
     if start_at > end_at:
         raise ValueError('must be start_time <= end_time')
     dats = extract_from_json_files(args.data_dir, start_at, end_at)
-    print(len(dats))
-    print(sum(x is None for x in dats))
+    print("Extracted {} battles.".format(len(dats)))
+    with open(args.dst, 'w') as f:
+        writer = csv.writer(f)
+        writer.writerows(dats)
+

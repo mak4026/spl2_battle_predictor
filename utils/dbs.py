@@ -1,0 +1,118 @@
+weapons = {
+    'sshooter' : 0,
+    'maneuver' : 1,
+    'splatroller' : 2,
+    'splatcharger' : 3,
+    'prime' : 4,
+    'sharp' : 5,
+    'hotblaster' : 6,
+    'dynamo' : 7,
+    'hokusai' : 8,
+    'splatscope' : 9,
+    'bucketslosher' : 10,
+    'barrelspinner' : 11,
+    'sshooter_collabo' : 12,
+    'wakaba' : 13,
+    'sputtery' : 14,
+    'clashblaster' : 15,
+    'soytuber' : 16,
+    'jetsweeper' : 17,
+    'nzap85' : 18,
+    'promodeler_rg' : 19,
+    'promodeler_mg' : 20,
+    '52gal' : 21,
+    '96gal' : 22,
+    'l3reelgun' : 23,
+    'h3reelgun' : 24,
+    'hotblaster_custom' : 25,
+    'nova' : 26,
+    'rapid' : 27,
+    'maneuver_collabo' : 28,
+    'splatroller_collabo' : 29,
+    'variableroller' : 30,
+    'carbon' : 31,
+    'splatcharger_collabo' : 32,
+    'splatscope_collabo' : 33,
+    'liter4k' : 34,
+    'liter4k_scope' : 35,
+    'splatspinner' : 36,
+    'hissen' : 37,
+    'pablo' : 38,
+    'dualsweeper' : 39,
+    'bold' : 40,
+    'parashelter' : 41,
+    'squiclean_a' : 42,
+    'prime_collabo' : 43,
+    'screwslosher' : 44,
+    'momiji' : 45,
+    'barrelspinner_deco' : 46,
+    'rapid_elite' : 47,
+    'campingshelter' : 48,
+    'bamboo14mk1' : 49,
+    'liter4k_custom' : 50,
+    'liter4k_scope_custom' : 51,
+    'longblaster' : 52,
+    'dynamo_tesla' : 53,
+    'jetsweeper_custom' : 54,
+    'pablo_hue' : 55,
+    'variableroller_foil' : 56,
+    'hydra' : 57,
+    'kelvin525' : 58,
+    'nzap89' : 59,
+    'bucketslosher_deco' : 60,
+    'bottlegeyser' : 61,
+    'spygadget' : 62,
+    'hokusai_hue' : 63,
+    'l3reelgun_d' : 64,
+    'sputtery_hue' : 65,
+    '52gal_deco' : 66,
+    'rapid_deco' : 67,
+}
+
+weapon_num = len(weapons)
+
+stages = {
+    'battera': 0,
+    'fujitsubo': 1,
+    'gangaze': 2,
+    'kombu': 3,
+    'ama': 4,
+    'chozame': 5,
+    'hokke': 6,
+    'tachiuo': 7,
+    'mystery': 8,
+    'manta': 9,
+    'mozuku': 10,
+    'engawa': 11,
+    'bbass': 12,
+    'zatou': 13,
+    'arowana': 14,
+    'hakofugu': 15,
+    'devon': 16,
+}
+
+stage_num = len(stages)
+
+ranks = {
+    'c': 0,
+    'b': 1,
+    'a': 2,
+    's': 3,
+    's+': 4,
+}
+
+rank_num = len(ranks)
+
+rules = {
+    'area': 0,
+    'yagura': 1,
+    'hoko': 2,
+    'asari': 3,
+}
+
+rule_num = len(rules)
+
+results = {
+    'lose': 0,
+    'win': 1,
+}
