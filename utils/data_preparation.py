@@ -42,7 +42,7 @@ def __is_disconnected(battle):
 
 def _make_weapon_vec(team_weapons):
     weapon_indices = [dbs.weapons[w] for w in team_weapons]
-    return np.eye(dbs.weapon_num, dtype=np.int32)[weapon_indices].sum(axis=0).tolist()
+    return (np.eye(dbs.weapon_num)[weapon_indices].sum(axis=0)/4).tolist()
 
 def _process_battle_data(battle):
     try:
@@ -53,17 +53,17 @@ def _process_battle_data(battle):
         his_weapons = _make_weapon_vec(his_weapons)
 
         stage_name = battle['map']['key']
-        stage = [1 if i == dbs.stages[stage_name] else 0 for i in range(dbs.stage_num)]
+        stage = [1.0 if i == dbs.stages[stage_name] else 0.0 for i in range(dbs.stage_num)]
 
         rule_name = battle['rule']['key']
-        rule = [1 if i == dbs.rules[rule_name] else 0 for i in range(dbs.rule_num)]
+        rule = [1.0 if i == dbs.rules[rule_name] else 0.0 for i in range(dbs.rule_num)]
 
         rank_name = battle['rank']['zone']['key']
         if battle['rank']['key'] == 's+':
             rank_name = 's+'
-        rank = [1 if i == dbs.ranks[rank_name] else 0 for i in range(dbs.rank_num)]
+        rank = [1.0 if i == dbs.ranks[rank_name] else 0.0 for i in range(dbs.rank_num)]
 
-        gachi_power = battle['estimate_gachi_power']
+        gachi_power = battle['estimate_gachi_power'] / 2200.0
         result = battle['result']
         result = dbs.results[result]
 

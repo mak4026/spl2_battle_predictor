@@ -65,8 +65,6 @@ weapons = {
     'hokusai_hue' : 63,
     'l3reelgun_d' : 64,
     'sputtery_hue' : 65,
-    '52gal_deco' : 66,
-    'rapid_deco' : 67,
 }
 
 weapon_num = len(weapons)
@@ -113,6 +111,6 @@ rules = {
 rule_num = len(rules)
 
 results = {
-    'lose': 0,
-    'win': 1,
+    'lose': 0.0,
+    'win': 1.0,
 }
