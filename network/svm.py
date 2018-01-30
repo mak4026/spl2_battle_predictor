@@ -20,7 +20,7 @@ class SVMClassifier():
     def train(self, filename):
         all_x, all_y = self.load_data(filename)
 
-        X_train, X_test, y_train, y_test = train_test_split(all_x, all_y, test_size=0.2, random_state=0)
+        X_train, X_test, y_train, y_test = train_test_split(all_x, all_y, test_size=0.2)
         tuned_parameters = [
             # {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
             {'C': [1, 10, 100, 1000], 'kernel': ['rbf'], 'gamma': [0.001, 0.0005, 0.0001]},
@@ -56,5 +56,5 @@ class SVMClassifier():
         print()
         y_true, y_pred = y_test, clf.predict(X_test)
         print(classification_report(y_true, y_pred))
-        print(accuracy_score(y_test, test_pred))
-        print(confusion_matrix(y_test, pred))
+        print(accuracy_score(y_test, y_pred))
+        print(confusion_matrix(y_test, y_pred))
