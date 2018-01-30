@@ -6,24 +6,27 @@ from sklearn.model_selection import StratifiedKFold
 from enum import Enum
 from utils import dbs
 
-NetworkMode = Enum("NetworkMode", "simple")
+NetworkMode = Enum("NetworkMode", "simple logreg")
 
 class SquidNetwork():
     def __init__(self, mode=NetworkMode.simple):
-        if mode == NetworkMode.simple:
-            self.network = self.build_network_simple()
+        self.mode = mode
+        self.name = mode.name
 
     def build_network_simple(self):
         idim = dbs.weapon_num * 2\
                + dbs.stage_num\
                + dbs.rule_num\
-               + dbs.rank_num\
                + 1 # gachi power
 
-        model = Sequential()
-        model.add(Dense(20, input_dim=idim, activation='relu'))
-        model.add(Dropout(0.5))
-        model.add(Dense(1, activation='sigmoid'))
+        if self.mode is NetworkMode.simple:
+            model = Sequential()
+            model.add(Dense(20, input_dim=idim, activation='relu'))
+            model.add(Dropout(0.5))
+            model.add(Dense(1, activation='sigmoid'))
+        elif self.mode is NetworkMode.logreg:
+            model = Sequential()
+            model.add(Dense(1, input_dim=idim, activation='sigmoid'))
 
         model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 

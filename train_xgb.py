@@ -1,5 +1,5 @@
-# from network.squid_net import SquidNetwork, NetworkMode
-from network.svm import SVMClassifier
+from network.xgboost import XGBoostClassifier
+
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
@@ -8,8 +8,5 @@ if __name__ == '__main__':
                         type=str)
     args = parser.parse_args()
 
-    # network = SquidNetwork(mode=NetworkMode.logreg)
-    # network.train(args.data_dir)
-
-    svm = SVMClassifier()
-    svm.train(args.data_dir)
+    xgb = XGBoostClassifier()
+    xgb.train(args.data_dir)

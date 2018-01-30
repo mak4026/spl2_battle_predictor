@@ -58,16 +58,17 @@ def _process_battle_data(battle):
         rule_name = battle['rule']['key']
         rule = [1.0 if i == dbs.rules[rule_name] else 0.0 for i in range(dbs.rule_num)]
 
-        rank_name = battle['rank']['zone']['key']
-        if battle['rank']['key'] == 's+':
-            rank_name = 's+'
-        rank = [1.0 if i == dbs.ranks[rank_name] else 0.0 for i in range(dbs.rank_num)]
+        # rank_name = battle['rank']['zone']['key']
+        # if battle['rank']['key'] == 's+':
+        #     rank_name = 's+'
+        # rank = [1.0 if i == dbs.ranks[rank_name] else 0.0 for i in range(dbs.rank_num)]
 
         gachi_power = battle['estimate_gachi_power'] / 2200.0
         result = battle['result']
         result = dbs.results[result]
 
-        return my_weapons + his_weapons + stage + rule + rank + [gachi_power, result]
+        # return my_weapons + his_weapons + stage + rule + rank + [gachi_power, result]
+        return my_weapons + his_weapons + stage + rule + [gachi_power, result]
     except (TypeError, KeyError) as e:
         return None
 
