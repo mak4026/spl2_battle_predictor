@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn import svm
 from sklearn.model_selection import GridSearchCV, train_test_split
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 from sklearn.svm import SVC
 from utils import dbs
 
@@ -56,10 +56,5 @@ class SVMClassifier():
         print()
         y_true, y_pred = y_test, clf.predict(X_test)
         print(classification_report(y_true, y_pred))
-        # print('hoge')
-        # clf = SVC()
-        # clf.fit(X_train, y_train)
-        # test_pred = clf.predict(X_test)
-
-        # print(classification_report(y_test, test_pred))
-        # print(accuracy_score(y_test, test_pred))
+        print(accuracy_score(y_test, test_pred))
+        print(confusion_matrix(y_test, pred))
