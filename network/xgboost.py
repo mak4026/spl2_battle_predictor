@@ -22,12 +22,12 @@ class XGBoostClassifier():
         X_train, X_test, y_train, y_test = train_test_split(all_x, all_y, test_size=0.2, random_state=0)
 
         # xgboostモデルの作成
-        clf = xgb.XGBClassifier()
+        clf = xgb.XGBClassifier(objective='binary:logistic')
 
         # ハイパーパラメータ探索
         clf_cv = GridSearchCV(clf, {
-            'max_depth': [2,4,6,8,10,12],
-            'n_estimators': [50,100,200,300,500]
+            'max_depth': [2,4,6],
+            'n_estimators': [25,50,100,200]
             }, verbose=2, n_jobs=6)
         clf_cv.fit(X_train, y_train)
         print(clf_cv.best_params_, clf_cv.best_score_)
