@@ -39,6 +39,3 @@ if __name__ == '__main__':
 
     print(network.name)
     network.train(args.data_dir)
-
-    # svm = SVMClassifier()
-    # svm.train(args.data_dir)
