@@ -5,17 +5,13 @@ from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 from sklearn.svm import SVC
 from utils import dbs
+from network.base_classifier import BaseClassifier
 
-class SVMClassifier():
-    def __init__(self):
+
+class SVMClassifier(BaseClassifier):
+    def __init__(self, weapon_only=False):
+        super().__init__(weapon_only)
         self.name = 'SVM'
-
-    def load_data(self, filename):
-        df = pd.read_csv(filename, header=None)
-        df.dropna(inplace=True)
-        X = df.iloc[:, :-1].values
-        y = df.iloc[:, -1].values
-        return X, y
 
     def train(self, filename):
         all_x, all_y = self.load_data(filename)
@@ -56,5 +52,6 @@ class SVMClassifier():
         print()
         y_true, y_pred = y_test, clf.predict(X_test)
         print(classification_report(y_true, y_pred))
-        print(accuracy_score(y_test, y_pred))
+        print("test accuracy: {}".format(accuracy_score(y_test, y_pred)))
+        print("confusion_matrix:")
         print(confusion_matrix(y_test, y_pred))

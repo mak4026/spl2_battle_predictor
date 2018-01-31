@@ -2,24 +2,31 @@ import numpy as np
 import pandas as pd
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
-from sklearn.model_selection import StratifiedKFold
+from keras.callbacks import EarlyStopping
+from sklearn.model_selection import train_test_split
 from enum import Enum
 from utils import dbs
+from network.base_classifier import BaseClassifier
 
-NetworkMode = Enum("NetworkMode", "simple logreg")
+NetworkMode = Enum("NetworkMode", "NeuralNetwork logreg")
 
-class SquidNetwork():
-    def __init__(self, mode=NetworkMode.simple):
+
+class SquidNetwork(BaseClassifier):
+    def __init__(self, weapon_only=False, mode=NetworkMode.logreg):
+        super().__init__(weapon_only)
         self.mode = mode
         self.name = mode.name
 
-    def build_network_simple(self):
-        idim = dbs.weapon_num * 2\
-               + dbs.stage_num\
-               + dbs.rule_num\
-               + 1 # gachi power
+    def build_network(self):
+        if self.weapon_only:
+            idim = dbs.weapon_num * 2
+        else:
+            idim = dbs.weapon_num * 2\
+                   + dbs.stage_num\
+                   + dbs.rule_num\
+                   + 1 # gachi power
 
-        if self.mode is NetworkMode.simple:
+        if self.mode is NetworkMode.NeuralNetwork:
             model = Sequential()
             model.add(Dense(20, input_dim=idim, activation='relu'))
             model.add(Dropout(0.5))
@@ -32,27 +39,17 @@ class SquidNetwork():
 
         return model
 
-    def load_data(self, filename):
-        df = pd.read_csv(filename, header=None)
-        df.dropna(inplace=True)
-        X = df.iloc[:, :-1].values
-        y = df.iloc[:, -1].values
-        return X, y
-
     def train(self, filename):
         all_x, all_y = self.load_data(filename)
-        fold_num = 10
-        skf = StratifiedKFold(n_splits=fold_num, shuffle=True)
-        cvscores = []
+        X_train, X_test, y_train, y_test = train_test_split(all_x, all_y, test_size=0.2)
 
-        for train, test in skf.split(all_x, all_y):
-            self.network = None
-            self.network = self.build_network_simple()
+        self.network = self.build_network()
 
-            self.network.fit(all_x[train], all_y[train],
-                             validation_split=0.33,
-                             epochs=100, batch_size=8)
-            scores = self.network.evaluate(all_x[test], all_y[test])
-            print("%s: %.2f%%" % (self.network.metrics_names[1], scores[1]*100))
-            cvscores.append(scores[1] * 100)
-        print("%.2f%% (+/- %.2f%%)" % (numpy.mean(cvscores), numpy.std(cvscores)))
+        self.network.fit(X_train, y_train,
+                         validation_split=0.25,
+                         epochs=100, batch_size=12,
+                         callbacks=[EarlyStopping()])
+
+        score = self.network.evaluate(X_test, y_test)
+        print('Test loss:', score[0])
+        print('Test accuracy:', score[1])
