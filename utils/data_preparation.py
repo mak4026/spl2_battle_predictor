@@ -98,10 +98,10 @@ if __name__=='__main__':
                         help='stat.ink形式のjsonが存在するディレクトリを指定します',
                         type=str)
     parser.add_argument('--start', '-s',
-                         help='集計対象に含める期間の開始時刻を%YYYY-%mm-%dd-%HHで指定します',
+                         help='集計対象に含める期間の開始時刻をYYYY-mm-dd-HHで指定します',
                          type=str)
     parser.add_argument('--end', '-e',
-                         help='集計対象に含める期間の終了時刻を%YYYY-%mm-%dd-%HHで指定します',
+                         help='集計対象に含める期間の終了時刻をYYYY-mm-dd-HHで指定します',
                          type=str)
     parser.add_argument('--dst', '-d',
                         required=True,
@@ -118,4 +118,3 @@ if __name__=='__main__':
     with open(args.dst, 'w') as f:
         writer = csv.writer(f)
         writer.writerows(dats)
-
