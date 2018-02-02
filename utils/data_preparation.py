@@ -84,7 +84,7 @@ def wrap_extraction(args):
     return extract_from_a_json(*args)
 
 def extract_from_json_files(json_dir, start, end):
-    json_files = glob.glob(json_dir+'/stat*.json')
+    json_files = glob.glob(json_dir+'/*.json')
     print(json_files)
     with Pool(processes=cpu_count()) as p:
         args = [(ajson, start, end) for ajson in json_files]

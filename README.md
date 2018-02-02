@@ -21,7 +21,7 @@ API doc: <https://github.com/fetus-hina/stat.ink/tree/master/doc/api-2>
 $ python3 utils/data_preparation.py data_dir [--start START] [--end END] --dst DST
 ```
 
-- `data_dir`: 前処理を行いたい，stat.ink形式のjsonファイルが入ってるディレクトリを指定します．
+- `data_dir`: 前処理を行いたい，stat.ink形式のjsonファイルが入ってるディレクトリを指定します．ここで指定したディレクトリに含まれる`*.json`に対して処理をします．
 - `--start`, `-s`: 前処理の対象とする期間の先頭の日付をYYYY-mm-dd-hhで指定します.
 - `--end`, `-e`: 前処理の対象とする期間の終端の日付をYYYY-mm-dd-hhで指定します.
 - `--dst`, `-d`: 前処理を行った後のCSVファイルの出力先を指定します．
