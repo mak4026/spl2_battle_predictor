@@ -22,10 +22,12 @@ class XGBoostClassifier(BaseClassifier):
         # ハイパーパラメータ探索
         clf = GridSearchCV(
             xgb_clf, {
+                'learning_rate': [0.01, 0.05, 0.1, 0.2],
+                'subsample': [0.5, 0.75, 1.0],
                 'max_depth': [2, 4, 6],
                 'n_estimators': [25, 50, 100, 200]
             },
-            cv=5,
+            cv=4,
             scoring='f1',
             verbose=2,
             n_jobs=6)

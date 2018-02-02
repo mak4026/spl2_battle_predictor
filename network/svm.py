@@ -19,18 +19,18 @@ class SVMClassifier(BaseClassifier):
         X_train, X_test, y_train, y_test = train_test_split(all_x, all_y, test_size=0.2)
         tuned_parameters = [
             # {'C': [1, 10, 100, 1000], 'kernel': ['linear']},
-            {'C': [1, 10, 100, 1000], 'kernel': ['rbf'], 'gamma': [0.001, 0.0005, 0.0001]},
+            {'C': [0.01 , 0.1, 1, 10, 100, 1000], 'kernel': ['rbf'], 'gamma': [0.001, 0.0005, 0.0001]},
             # {'C': [1, 10, 100, 1000], 'kernel': ['poly'], 'degree': [2, 3, 4], 'gamma': [0.001, 0.0001]},
-            {'C': [1, 10, 100, 1000], 'kernel': ['sigmoid'], 'gamma': [0.001, 0.0001]}
+            {'C': [0.01 , 0.1, 1, 10, 100, 1000], 'kernel': ['sigmoid'], 'gamma': [0.001, 0.0001]}
             ]
         clf = GridSearchCV(
-            SVC(), # 識別器
-            tuned_parameters, # 最適化したいパラメータセット
-            cv=5, # 交差検定の回数
+            SVC(),
+            tuned_parameters,
+            cv=4,
             scoring='f1',
             verbose=2,
-            n_jobs=6
-            ) # モデルの評価関数の指定
+            n_jobs=-1
+            )
         clf.fit(X_train, y_train)
 
 
